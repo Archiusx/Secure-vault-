@@ -32,3 +32,21 @@ li.innerText = file.name
 document.getElementById("fileList").appendChild(li)
 
 }
+
+async function unlock() {
+
+let pin = document.getElementById("pin").value
+
+const { data } = await supabase
+.from("Valid_auth")
+.select("pin_hash")
+.eq("id",1)
+.single()
+
+if(pin == data.pin_hash){
+alert("Vault unlocked")
+}else{
+alert("Wrong PIN")
+}
+
+}
