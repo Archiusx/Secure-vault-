@@ -3,18 +3,26 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
   "
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
-const correctPin = "4632"
 
-function unlock(){
+async function unlock() {
 
 let pin = document.getElementById("pin").value
 
-if(pin === correctPin){
+const { data, error } = await supabase
+.from("Valid_auth")
+.select("pin_hash")
+.eq("id",1)
+.single()
+
+if(pin == data.pin_hash){
+
 document.getElementById("loginBox").style.display="none"
 document.getElementById("vault").style.display="block"
-}
-else{
+
+}else{
+
 document.getElementById("error").innerText="Wrong PIN"
+
 }
 
 }
@@ -30,23 +38,5 @@ let li = document.createElement("li")
 li.innerText = file.name
 
 document.getElementById("fileList").appendChild(li)
-
-}
-
-async function unlock() {
-
-let pin = document.getElementById("pin").value
-
-const { data } = await supabase
-.from("Valid_auth")
-.select("pin_hash")
-.eq("id",1)
-.single()
-
-if(pin == data.pin_hash){
-alert("Vault unlocked")
-}else{
-alert("Wrong PIN")
-}
 
 }
